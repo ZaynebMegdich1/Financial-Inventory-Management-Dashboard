@@ -12,7 +12,7 @@ The dataset consists of fictitious business data, simulating real-world financia
 Below are the screenshots of the Power BI dashboard:  
 
 ### **Welcome Page**  
-![image alt]([images/welcome_page.png](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/main/wlc%20page.JPG?raw=true))  
+![images/welcome_page.png](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/main/wlc%20page.JPG?raw=true)
 
 ### **Page 1: Financial Overview**  
 ![image alt]([images/financial_overview.png](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/5089c7be35bd5ab200bb3bd99d17fe2c883f92c2/page1.JPG))  
