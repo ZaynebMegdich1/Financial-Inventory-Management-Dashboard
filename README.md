@@ -15,7 +15,7 @@ Below are the screenshots of the Power BI dashboard:
 ![images/welcome_page.png](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/main/wlc%20page.JPG?raw=true)
 
 ### **Page 1: Financial Overview**  
-![image alt]([images/financial_overview.png](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/5089c7be35bd5ab200bb3bd99d17fe2c883f92c2/page1.JPG))  
+![image alt](https://github.com/ZaynebMegdich1/Financial-Inventory-Management_Dashboard/blob/637969bd6b90ae1d5eb40bcdb312957ab22a2afc/page1.JPG)
 
 ### **Page 2: Inventory Insights**  
 ![Inventory Insights](images/inventory_insights.png)  
