@@ -1,173 +1,119 @@
-# **DAX Measures for Financial & Inventory Management Dashboard**  
+# **DAX Measures for Financial and Inventory Management**  
 
-## **1. Financial Performance Measures**  
+## **1. Financial Dashboard Measures**  
 
 ### **1.1 Total Revenue**  
 ```DAX
 Total Revenue = SUM(Stock[Revenue])
 ```  
-This measure calculates the total revenue generated from sales.  
+This measure calculates the total revenue generated from stock sales.  
 
-### **1.2 Revenue Previous Month (PM)**  
+### **1.2 Revenue for Previous Month**  
 ```DAX
-Revenue PM = CALCULATE(SUM(Stock[Revenue]), PREVIOUSMONTH('Date'[Date]))
+Revenue Previous Month = CALCULATE([Total Revenue], PREVIOUSMONTH('Date'[Date]))
 ```  
 This measure calculates the total revenue for the previous month.  
 
-### **1.3 Sales Variance**  
+### **1.3 Revenue Variance**  
 ```DAX
-Sales Variance = [Total Revenue] - [Revenue PM]
+Revenue Variance = [Total Revenue] - [Revenue Previous Month]
 ```  
-This measure calculates the difference in revenue compared to the previous month.  
+This measure calculates the absolute difference in revenue compared to the previous month.  
 
 ### **1.4 Revenue Variance Percentage**  
 ```DAX
-Revenue Var % = DIVIDE([Sales Variance], [Total Revenue], 0)
+Revenue Variance % = DIVIDE([Revenue Variance], [Total Revenue], 0)
 ```  
 This measure calculates the percentage change in revenue compared to the previous month.  
 
----
-
-## **2. Order Analysis Measures**  
-
-### **2.1 Number of Orders**  
+### **1.5 Total Orders**  
 ```DAX
-NumberOfOrders = COUNTROWS('Past Orders')
+Total Orders = COUNTROWS('Past Orders')
 ```  
-This measure calculates the total number of orders placed.  
+This measure calculates the total number of customer orders.  
 
-### **2.2 Orders Previous Month (PM)**  
+### **1.6 Orders for Previous Month**  
 ```DAX
-Orders PM = CALCULATE([NumberOfOrders], PREVIOUSMONTH('Date'[Date]))
+Orders Previous Month = CALCULATE([Total Orders], PREVIOUSMONTH('Date'[Date]))
 ```  
-This measure calculates the number of orders in the previous month.  
+This measure calculates the total number of orders placed in the previous month.  
 
-### **2.3 Orders Variance**  
+### **1.7 Orders Variance**  
 ```DAX
-Orders Variance = [NumberOfOrders] - [Orders PM]
+Orders Variance = [Total Orders] - [Orders Previous Month]
 ```  
-This measure calculates the difference in the number of orders compared to the previous month.  
+This measure calculates the absolute change in the number of orders compared to the previous month.  
 
-### **2.4 Orders Variance Percentage**  
+### **1.8 Orders Variance Percentage**  
 ```DAX
-Orders Var % = DIVIDE([Orders Variance], [NumberOfOrders], 0)
+Orders Variance % = DIVIDE([Orders Variance], [Total Orders], 0)
 ```  
 This measure calculates the percentage change in the number of orders compared to the previous month.  
 
----
-
-## **3. Inventory Management Measures**  
-
-### **3.1 Stock Overview**  
-
-#### **Total Inventory Value**  
+### **1.9 Total Quantity Sold**  
 ```DAX
-TotalInventoryValue = SUM(Stock[Total Stock Value])
+Total Quantity Sold = SUM(Stock[Sale Quantity])
 ```  
-This measure calculates the total value of the inventory in stock.  
+This measure calculates the total quantity of items sold.  
 
-#### **Stock Quantity**  
+### **1.10 Quantity Sold for Previous Month**  
 ```DAX
-Stock Quantity = SUM(Stock[Current Stock Quantity])
+Quantity Sold Previous Month = CALCULATE([Total Quantity Sold], PREVIOUSMONTH('Date'[Date]))
 ```  
-This measure calculates the total quantity of stock available.  
+This measure calculates the quantity of items sold in the previous month.  
 
-#### **Average Stock Quantity**  
+### **1.11 Quantity Sold Variance**  
 ```DAX
-AverageStock = AVERAGE(Stock[Current Stock Quantity])
+Quantity Sold Variance = [Total Quantity Sold] - [Quantity Sold Previous Month]
 ```  
-This measure calculates the average stock quantity available.  
+This measure calculates the absolute difference in quantity sold compared to the previous month.  
 
-#### **Number of Items**  
+### **1.12 Quantity Sold Variance Percentage**  
 ```DAX
-Number of Items = DISTINCTCOUNT(Stock[SKU ID])
-```  
-This measure calculates the total number of unique items in stock.  
-
----
-
-### **3.2 Stock Movement & Turnover**  
-
-#### **Total Order Quantity**  
-```DAX
-TotalOrderQuantity = SUM('Past Orders'[Order Quantity])
-```  
-This measure calculates the total quantity of orders placed.  
-
-#### **Quantity Sold**  
-```DAX
-Quantity Sold = SUM(Stock[Sale Quantity])
-```  
-This measure calculates the total quantity of products sold.  
-
-#### **Quantity Sold Previous Month (PM)**  
-```DAX
-Quantity Sold PM = CALCULATE([Quantity Sold], PREVIOUSMONTH('Date'[Date]))
-```  
-This measure calculates the quantity of products sold in the previous month.  
-
-#### **Quantity Sold Variance**  
-```DAX
-Quantity Sold Variance = [Quantity Sold] - [Quantity Sold PM]
-```  
-This measure calculates the difference in quantity sold compared to the previous month.  
-
-#### **Quantity Sold Variance Percentage**  
-```DAX
-Quantity Var % = DIVIDE([Quantity Sold Variance], [Quantity Sold], 0)
+Quantity Sold Variance % = DIVIDE([Quantity Sold Variance], [Total Quantity Sold], 0)
 ```  
 This measure calculates the percentage change in quantity sold compared to the previous month.  
 
-#### **Inventory Turnover**  
-```DAX
-InventoryTurnover = DIVIDE([TotalOrderQuantity], [AverageStock], 0)
-```  
-This measure calculates the inventory turnover rate, indicating how many times stock is sold and replaced over a period.  
-
 ---
 
-### **3.3 Stock Levels & Reordering**  
+## **2. Inventory Management Measures**  
 
-#### **Stock Out Rate**  
+### **2.1 Total Inventory Value**  
 ```DAX
-StockOut Rate = 
-VAR noStock = CALCULATE(COUNTROWS(Stock), Stock[Current Stock Quantity] = 0)
-VAR NumberOfStock = COUNTROWS(Stock)
-RETURN IF(
-    ISBLANK(DIVIDE(noStock, NumberOfStock, 0)), 
-    0, 
-    DIVIDE(noStock, NumberOfStock, 0)
-)
+Total Inventory Value = SUM(Stock[Total Stock Value])
 ```  
-This measure calculates the stock-out rate by determining the percentage of out-of-stock items.  
+This measure calculates the total value of the current inventory.  
 
-#### **Out of Stock Products**  
+### **2.2 Total Stock Quantity**  
 ```DAX
-Out of Stock Products = 
-VAR OutOfStockTable = FILTER(Stock, Stock[Stock Status] = "Out Of Stock")
-RETURN CONCATENATEX(OutOfStockTable, Stock[SKU ID], ", ")
+Total Stock Quantity = SUM(Stock[Current Stock Quantity])
 ```  
-This measure lists all SKUs that are currently out of stock.  
+This measure calculates the total quantity of items available in stock.  
 
-#### **Out of Stock Count**  
+### **2.3 Average Stock Quantity**  
 ```DAX
-OutStock Number = 
-CALCULATE(COUNTROWS(Stock), FILTER(Stock, Stock[Stock Status] = "Out Of Stock"))
+Average Stock Quantity = AVERAGE(Stock[Current Stock Quantity])
 ```  
-This measure calculates the number of out-of-stock products.  
+This measure calculates the average stock quantity across all items.  
 
-#### **Average Daily Sales**  
+### **2.4 Total Order Quantity**  
 ```DAX
-Avg Daily Sales = 
-VAR TotalSales = SUM('Past Orders'[Order Quantity])
+Total Order Quantity = SUM('Past Orders'[Order Quantity])
+```  
+This measure calculates the total number of items ordered.  
+
+### **2.5 Average Daily Sales**  
+```DAX
+Average Daily Sales = 
+VAR TotalSales = [Total Order Quantity]
 VAR TotalDays = DISTINCTCOUNT('Date'[Date])
 RETURN DIVIDE(TotalSales, TotalDays, 0)
 ```  
-This measure calculates the average number of units sold per day.  
+This measure calculates the average number of items sold per day.  
 
-#### **Maximum Daily Sales**  
+### **2.6 Maximum Daily Sales**  
 ```DAX
-Max Daily Sales = 
+Maximum Daily Sales = 
 VAR DailySales = 
     SUMMARIZE(
         'Past Orders',
@@ -178,63 +124,81 @@ VAR DailySales =
 RETURN 
     MAXX(DailySales, [Daily Sales])
 ```  
-This measure calculates the highest number of units sold in a single day.  
+This measure calculates the highest number of items sold on a single day.  
 
-#### **Safety Stock**  
+### **2.7 Inventory Turnover Ratio**  
 ```DAX
-Safety Stock = 
-VAR MaxDailySales = [Max Daily Sales]
-VAR AvgDailySales = [Avg Daily Sales]
-VAR MaxLeadTime = MAX('Stock'[Maximum Lead Time (days)])
-VAR AvgLeadTime = AVERAGE('Stock'[Average Lead Time (days)])
-RETURN 
-    (MaxDailySales * MaxLeadTime) - (AvgDailySales * AvgLeadTime)
+Inventory Turnover Ratio = DIVIDE([Total Order Quantity], [Average Stock Quantity], 0)
 ```  
-This measure calculates the safety stock, ensuring that stock is available to handle unexpected demand.  
+This measure calculates how frequently inventory is sold and replaced.  
 
-#### **Reorder Point**  
+### **2.8 Stockout Rate**  
+```DAX
+Stockout Rate = 
+VAR NoStock = CALCULATE(COUNTROWS(Stock), Stock[Current Stock Quantity] = 0)
+VAR TotalStockItems = COUNTROWS(Stock)
+RETURN DIVIDE(NoStock, TotalStockItems, 0)
+```  
+This measure calculates the percentage of out-of-stock items.  
+
+### **2.9 Out-of-Stock Items Count**  
+```DAX
+Out of Stock Count = 
+CALCULATE(COUNTROWS(Stock), FILTER(Stock, Stock[Stock Status] = "Out Of Stock"))
+```  
+This measure counts the number of items currently out of stock.  
+
+### **2.10 Out-of-Stock Products List**  
+```DAX
+Out of Stock Products = 
+VAR OutOfStockTable = FILTER(Stock, Stock[Stock Status] = "Out Of Stock")
+RETURN 
+CONCATENATEX(OutOfStockTable, Stock[SKU ID], ", ")
+```  
+This measure generates a list of product IDs that are currently out of stock.  
+
+### **2.11 Reorder Point Calculation**  
 ```DAX
 Reorder Point = 
-VAR AvgDailySales = [Avg Daily Sales]
-VAR AvgLeadTime = AVERAGE('Stock'[Average Lead Time (days)])
-VAR SafetyStock = [Safety Stock]
+VAR AvgDailySales = [Average Daily Sales]  
+VAR AvgLeadTime = AVERAGE(Stock[Average Lead Time (days)])
+VAR SafetyStock = [Safety Stock] 
 RETURN 
     (AvgDailySales * AvgLeadTime) + SafetyStock
 ```  
-This measure calculates the reorder point, which determines when new stock should be ordered.  
+This measure calculates the reorder point based on average daily sales, lead time, and safety stock.  
 
-#### **Reorder Point Alert**  
+### **2.12 Reorder Point Alert**  
 ```DAX
 Reorder Point Alert = 
-VAR reorder = CALCULATE(
-    COUNT('Stock'[SKU ID]),
-    FILTER('Stock', 'Stock'[Current Stock Quantity] <= [Reorder Point])
-)
-VAR out = CALCULATE(COUNTROWS(Stock), Stock[Stock Status] = "Out Of Stock")
-RETURN reorder - out
+VAR ReorderNeeded = 
+    CALCULATE(
+        COUNT(Stock[SKU ID]),
+        FILTER(Stock, Stock[Current Stock Quantity] <= [Reorder Point])
+    )
+VAR OutOfStockCount =
+    CALCULATE(COUNTROWS(Stock), Stock[Stock Status] = "Out Of Stock")
+RETURN
+ReorderNeeded - OutOfStockCount
 ```  
-This measure calculates the number of products that have reached or passed their reorder point.  
+This measure calculates the number of items that need restocking, excluding already out-of-stock items.  
 
-#### **Restock Indicator**  
+### **2.13 Need Restock Alert**  
 ```DAX
-Need Restock = 
+Need Restock Alert = 
 IF( 
-     [Stock Quantity] <= [Reorder Point], 
+     [Total Stock Quantity] <= [Reorder Point], 
     "Restock", 
     "Not Yet" 
 )
 ```  
-This measure provides a simple "Restock" or "Not Yet" status for products based on their reorder point.  
+This measure provides an alert when stock reaches the reorder point.  
 
----
-
-### **3.4 Time-Based Insights**  
-
-#### **Previous Month Name**  
+### **2.14 Previous Month Name (for reporting)**  
 ```DAX
-PreviousMonthName = 
+Previous Month Name = 
 FORMAT(EOMONTH(MAX('Date'[Date]), -1), "MMMM") & ": "
 ```  
-This measure dynamically retrieves the name of the previous month for reporting purposes.  
+This measure retrieves the name of the previous month for reporting purposes.  
 
 ---
