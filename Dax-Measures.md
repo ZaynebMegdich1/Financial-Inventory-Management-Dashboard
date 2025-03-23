@@ -1,4 +1,4 @@
-# **DAX Measures for Financial and Inventory Management**  
+# **DAX Measures & Calculated Columns for Financial and Inventory Management**  
 
 ## **1. Financial Dashboard Measures**  
 
@@ -202,3 +202,37 @@ FORMAT(EOMONTH(MAX('Date'[Date]), -1), "MMMM") & ": "
 This measure retrieves the name of the previous month for reporting purposes.  
 
 ---
+## **3. Calculated Columns for ABC Classification & Ranking**  
+
+### **3.1 Percentage Revenue Share**  
+```DAX
+% Revenue Share = DIVIDE(Stock[Revenue], SUM(Stock[Revenue]))
+```  
+This column calculates the percentage share of total revenue for each product.  
+
+### **3.2 Cumulative Percentage Revenue**  
+```DAX
+CP Revenue = 
+CALCULATE(
+    SUM(Stock[% Revenue Share]),
+    FILTER(Stock, Stock[% Revenue Share] >= EARLIER(Stock[% Revenue Share]))
+)
+```  
+This column calculates the cumulative percentage of revenue share, used for ABC classification.  
+
+### **3.3 ABC Classification**  
+```DAX
+ABC Classification = 
+IF(Stock[CP Revenue] <= 0.7, "A", 
+   IF(Stock[CP Revenue] <= 0.9, "B", "C"))
+```  
+This column assigns each product to an ABC classification based on its cumulative revenue share:  
+- **A:** High-value, low-volume products (top 70% of revenue)  
+- **B:** Moderate-value products (next 20% of revenue)  
+- **C:** Low-value, high-volume products (last 10% of revenue)  
+
+### **3.4 Product Ranking by Revenue Share**  
+```DAX
+Product Rank = RANKX(Stock, Stock[% Revenue Share])
+```  
+This column ranks products based on their revenue contribution, with **1 being the highest revenue share.**
