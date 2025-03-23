@@ -1,4 +1,4 @@
-# ** DAX Measures & Calculated Columns for Financial and Inventory Management Dashboard **  
+# **DAX Measures & Calculated Columns for Financial and Inventory Management Dashboard**  
 
 ## **1. Financial Dashboard Measures**  
 
